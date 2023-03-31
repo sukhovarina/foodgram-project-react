@@ -1,13 +1,14 @@
 import os
+from django.core.management.utils import get_random_secret_key
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-SECRET_KEY = 'pq6exi-&)o1n*v0n=q*d2_k6y(%tusv$2vsxe-#740bko6cu*l'
+SECRET_KEY = get_random_secret_key()
 
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
