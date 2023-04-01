@@ -33,6 +33,10 @@ class CustomUser(AbstractUser):
 
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
     def __str__(self):
         return f'{self.username}'
 
