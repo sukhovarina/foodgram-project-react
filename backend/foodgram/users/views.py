@@ -6,10 +6,10 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Follow
+from .models import Follow, CustomUser
 from .serializers import CustomUserSerializer, FollowSerializer
 
-User = get_user_model()
+User = CustomUser
 
 
 class CustomUserViewSet(UserViewSet):
@@ -35,9 +35,9 @@ class CustomUserViewSet(UserViewSet):
     def subscribe(self, request, id=None):
         user = request.user
         author = get_object_or_404(User, id=id)
-        queryset = Follow.objects.filter(user=user, author=author).exists()
+        check_subscription = Follow.objects.filter(user=user, author=author).exists()
         if request.method == 'POST':
-            if queryset or user == author:
+            if check_subscription or user == author:
                 return Response(
                     'Вы уже подписаны на этого пользователя.',
                     status=status.HTTP_400_BAD_REQUEST
@@ -48,7 +48,7 @@ class CustomUserViewSet(UserViewSet):
                 context={'request': request}
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        if queryset:
+        if check_subscription:
             Follow.objects.filter(user=user, author=author).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status.HTTP_400_BAD_REQUEST)
