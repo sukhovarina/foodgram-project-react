@@ -20,7 +20,7 @@ class CustomUserViewSet(UserViewSet):
             permission_classes=(IsAuthenticated,))
     def subscriptions(self, request):
         user = request.user
-        queryset = Follow.objects.filter(user=user)
+        queryset = User.objects.filter(following__user=user)
         pages = self.paginate_queryset(queryset)
         serializer = FollowSerializer(
             pages,
@@ -32,8 +32,8 @@ class CustomUserViewSet(UserViewSet):
     @action(detail=True,
             methods=['post', 'delete'],
             permission_classes=(IsAuthenticated,))
-    def subscribe(self, request, id=None):
-        user = request.user
+    def subscribe(self, request, id):
+        user = self.request.user
         author = get_object_or_404(User, id=id)
         check_subscription = Follow.objects.filter(user=user, author=author).exists()
         if request.method == 'POST':
