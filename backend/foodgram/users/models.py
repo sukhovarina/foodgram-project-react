@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import UniqueConstraint
 
 ROLES = (
     ('user', 'user'),
@@ -34,6 +35,7 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
     class Meta:
+        ordering = ['-id']
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
@@ -57,13 +59,12 @@ class Follow(models.Model):
     )
 
     class Meta:
-        ordering = ('-author',)
+        ordering = ['-id']
         verbose_name = 'Подписки'
         verbose_name_plural = 'Подписки'
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'author'],
-                name='unique_followings')]
-
-    def __str__(self):
-        return f'{self.user} подписан на {self.author}'
+                fields=('user', 'author',),
+                name='unique_followings'
+            ),
+        ]

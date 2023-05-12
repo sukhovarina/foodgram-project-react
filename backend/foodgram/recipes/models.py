@@ -57,12 +57,6 @@ class Ingredient(models.Model):
         ordering = ('name',)
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
-        constraints = [
-            models.UniqueConstraint(
-                fields=['name', 'measurement_unit'],
-                name='unique_ingredient'
-            )
-        ]
 
     def __str__(self):
         return f'{self.name}, {self.measurement_unit}'
@@ -117,17 +111,15 @@ class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='ingredient_amount',
         verbose_name='Рецепт'
     )
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        related_name='ingredient_amount',
         verbose_name='Ингредиент'
     )
     amount = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(100)],
+        validators=[MinValueValidator(1), MaxValueValidator(1000)],
         verbose_name='Количество'
     )
 
@@ -163,12 +155,7 @@ class Favorite(models.Model):
     )
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['user', 'recipe'],
-                name='unique_favorite'
-            )
-        ]
+        ordering = ('id',)
         verbose_name = 'Рецепт в избранном'
         verbose_name_plural = 'Рецепт в избранном'
 
@@ -180,20 +167,21 @@ class ShoppingCart(models.Model):
     user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
-        related_name='shopping_cart',
+        related_name='shoppingcart',
         verbose_name='Пользователь'
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        verbose_name='Рецепт'
+        verbose_name='Рецепт',
+        related_name='shoppingcart',
     )
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
-                name='unique_shoppinglist'
+                name='unique_shoppingcart'
             )
         ]
         verbose_name = 'Корзина'

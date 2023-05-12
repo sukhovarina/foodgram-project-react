@@ -14,12 +14,12 @@ class IngredientSearchFilter(SearchFilter):
 class RecipeFilter(django_filters.FilterSet):
     author = AllValuesMultipleFilter(field_name='author__id')
     tags = AllValuesMultipleFilter(field_name="tags__slug")
-    is_in_shopping_cart = filters.BooleanFilter(widget=BooleanWidget())
-    is_favorited = filters.BooleanFilter(widget=BooleanWidget())
+    shoppingcart = filters.BooleanFilter(widget=BooleanWidget())
+    favorite = filters.BooleanFilter(widget=BooleanWidget())
 
     class Meta:
         model = Recipe
         fields = (
             'author__id', 'tags__slug',
-            'is_favorited',
+            'favorite',
         )
