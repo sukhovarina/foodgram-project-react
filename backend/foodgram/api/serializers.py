@@ -1,3 +1,4 @@
+import re
 from rest_framework import serializers
 
 from recipes.models import (Tag, Recipe, Ingredient,
@@ -116,6 +117,15 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         if not data:
             return serializers.ValidationError(
                 'Необходимо выбрать тег.'
+            )
+        return data
+
+    def validate_name(self, data):
+        regex = '^[a-zA-Zа-яА-ЯёЁ]+$'
+        pattern = re.compile(regex)
+        if pattern.search(data) is None:
+            raise serializers.ValidationError(
+                'Имя должно содержать буквы.'
             )
         return data
 
