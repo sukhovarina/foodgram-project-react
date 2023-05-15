@@ -146,18 +146,18 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    def get_is_favorited(self, obj):
-        request = self.context.get('request')
-        if not request or request.user.is_anonymous:
-            return False
-        return Favorite.objects.filter(user=request.user, recipe=obj).exists()
-
-    def get_is_in_shopping_cart(self, obj):
-        user = self.context['request'].user
-        if user.is_anonymous:
-            return False
-        return Recipe.objects.filter(shoppingcart__user=user,
-                                     id=obj.id).exists()
+    # def get_is_favorited(self, obj):
+    #     request = self.context.get('request')
+    #     if not request or request.user.is_anonymous:
+    #         return False
+    #     return Favorite.objects.filter(user=request.user, recipe=obj).exists()
+    #
+    # def get_is_in_shopping_cart(self, obj):
+    #     user = self.context['request'].user
+    #     if user.is_anonymous:
+    #         return False
+    #     return Recipe.objects.filter(shoppingcart__user=user,
+    #                                  id=obj.id).exists()
 
     def to_representation(self, instance):
         serializer = RecipeSerializer(instance)

@@ -73,7 +73,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(methods=['POST', 'DELETE'], detail=True,
             permission_classes=[IsAuthenticated])
-    def shopping_cart(self, request, pk):
+    def shopping_cart(self, request, pk=None):
         user = request.user
         queryset = get_object_or_404(Recipe, pk=pk)
         if request.method == 'POST':
@@ -102,7 +102,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         )
         shopping_list_text = 'Список покупок:\n\n'
         for item in shopping_list:
-            ingredient = Ingredient.objects.get(pk=item['ingredient'])
+            ingredient = Ingredient.objects.get(id=item['ingredient'])
             amount = item['amount']
             shopping_list_text += (
                 f'{ingredient.name}, {amount} '
